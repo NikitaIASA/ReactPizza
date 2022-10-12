@@ -1,21 +1,25 @@
 import React from "react";
+import {useSelector, useDispatch} from 'react-redux';
+import {setSort} from '../redux/slices/filterSlice';
 
-function Sort({value, onChangeSort}) {
+function Sort() {
+  const dispatch = useDispatch();
+  const sort = useSelector(state => state.filter.sort);
+
   const [open, setOpen] = React.useState(false);
   const list = [
-    {name: 'популярности (DESC)', sortProperty: 'rating'},
-    {name: 'популярности (ASC)', sortProperty: '-rating'},
-    {name: 'цене (DESK)', sortProperty: 'price'},
-    {name: 'цене (ASC)', sortProperty: '-price'},
-    {name: 'алфавиту (DESK)', sortProperty: 'title'},
-    {name: 'алфавиту (ASC)', sortProperty: 'title'},
+    { name: "популярности (DESC)", sortProperty: "rating" },
+    { name: "популярности (ASC)", sortProperty: "-rating" },
+    { name: "цене (DESK)", sortProperty: "price" },
+    { name: "цене (ASC)", sortProperty: "-price" },
+    { name: "алфавиту (DESK)", sortProperty: "title" },
+    { name: "алфавиту (ASC)", sortProperty: "title" },
   ];
- // const sortName = list[value].name;
 
-  const onClickListItem = (i) => {
-    onChangeSort(i);
+  const onClickListItem = (obj) => {
+    dispatch(setSort(obj));
     setOpen(false);
-  }
+  };
 
   return (
     <div className="sort">
@@ -33,7 +37,7 @@ function Sort({value, onChangeSort}) {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>{value.name}</span>
+        <span onClick={() => setOpen(!open)}>{sort.name}</span>
       </div>
       {open && (
         <div className="sort__popup">
@@ -42,10 +46,13 @@ function Sort({value, onChangeSort}) {
               <li
                 key={i}
                 onClick={() => onClickListItem(obj)}
-                className={value.sortProperty === obj.sortProperty ? "active" : ""}>
+                className={
+                  sort.sortProperty === obj.sortProperty ? "active" : ""
+                }
+              >
                 {obj.name}
               </li>
-            ))} 
+            ))}
           </ul>
         </div>
       )}
