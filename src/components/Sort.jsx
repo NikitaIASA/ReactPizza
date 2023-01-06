@@ -5,6 +5,7 @@ import {setSort} from '../redux/slices/filterSlice';
 function Sort() {
   const dispatch = useDispatch();
   const sort = useSelector(state => state.filter.sort);
+  const sortRef = React.useRef(); // Ссылка на окошка выбора категорий
 
   const [open, setOpen] = React.useState(false);
   const list = [
@@ -21,8 +22,23 @@ function Sort() {
     setOpen(false);
   };
 
+  React.useEffect(() => { // Если область клика была не на pop-up окне, меняем состояние setOpen на false;
+    const handleClickOutside = (event) => {
+        if (!event.path.includes(sortRef.current)) {
+          setOpen(false);
+        }
+    };
+    document.body.addEventListener('click', handleClickOutside )
+
+    return () => { // удаляем eventListener после смены страницы (cleanUp function)
+      document.body.removeEventListener('click', handleClickOutside);
+    }
+  }, [])
+
+
+
   return (
-    <div className="sort">
+    <div  ref={sortRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"
